@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 using JetBrains.Annotations;
 
@@ -342,7 +343,14 @@ namespace Euler
                 {01, 70, 54, 71, 83, 51, 54, 69, 16, 92, 33, 48, 61, 43, 52, 01, 89, 19, 67, 48}
             };
 
+            for (int row = 1; row < 20; row++)
+            {
+                for (int col = 1; col < 20; col++)
+                {
+                    var pivot = grid[row, col];
 
+                }
+            }
         }
     }
 
