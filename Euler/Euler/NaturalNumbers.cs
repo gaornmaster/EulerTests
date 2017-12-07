@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Text;
-using JetBrains.Annotations;
 
 namespace Euler
 {
@@ -58,10 +56,7 @@ namespace Euler
          * The prime factors of 13195 are 5, 7, 13 and 29.
          * What is the largest prime factor of the number 600851475143 ?
          */
-        public static long LargestPrimeFactorOf600851475143()
-        {
-            return LargestPrimeFactorOf(600851475143);
-        }
+        public static long LargestPrimeFactorOf600851475143() { return LargestPrimeFactorOf(600851475143); }
 
         public static long LargestPrimeFactorOf(long numberToFactorize)
         {
@@ -89,7 +84,6 @@ namespace Euler
                         int value = anHundred * 100 + index;
                         int candidate = value * slacker;
                         if (IsLongerPalindrom(candidate, result)) { potentials.Add(candidate); }
-
                     }
                     slacker++;
                 }
@@ -115,7 +109,7 @@ namespace Euler
          */
         public static int SmallestEvenlyDivisibleByAllTwentyFirstNumbers()
         {
-            HashSet<int> factors = new HashSet<int>(new[] { 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 });
+            HashSet<int> factors = new HashSet<int>(new[] {11, 12, 13, 14, 15, 16, 17, 18, 19, 20});
 
             int result = 0;
             int candidate = 2520;
@@ -164,8 +158,8 @@ namespace Euler
 
         public static ulong TenThousandOnethPrime()
         {
-            var tenThousandPrimes = new[] { 1UL };
-            ulong limit = (ulong)Math.Pow(2, 16);
+            var tenThousandPrimes = new[] {1UL};
+            ulong limit = (ulong) Math.Pow(2, 16);
 
             tenThousandPrimes = Utils.FindPrimes(limit, tenThousandPrimes);
             while (tenThousandPrimes.Length < 10001)
@@ -206,7 +200,6 @@ namespace Euler
          */
         public static long GreatestAdjacentSerieInBigDigit()
         {
-
             var bigDigitBuilder = new StringBuilder();
             bigDigitBuilder.Append("73167176531330624919225119674426574742355349194934");
             bigDigitBuilder.Append("96983520312774506326239578318016984801869478851843");
@@ -242,10 +235,7 @@ namespace Euler
             while (index < barrier)
             {
                 foreach (char t in textWindow) { sumOfWindow *= int.Parse(t.ToString()); }
-                if (sumOfWindow > bestSum)
-                {
-                    bestSum = sumOfWindow;
-                }
+                if (sumOfWindow > bestSum) { bestSum = sumOfWindow; }
                 index++;
                 textWindow = bigDigit.Substring(index, lengthOfWindow);
                 sumOfWindow = 1;
@@ -286,10 +276,10 @@ namespace Euler
         {
             ulong result = 0;
 
-            var candidates = Utils.FindPrimes(2000000, new ulong[] { 0 });
+            var candidates = Utils.FindPrimes(2000000, new ulong[] {0});
             Array.ForEach(candidates, prime => result += prime);
 
-            return (long)result;
+            return (long) result;
         }
 
         /*
@@ -343,15 +333,86 @@ namespace Euler
                 {01, 70, 54, 71, 83, 51, 54, 69, 16, 92, 33, 48, 61, 43, 52, 01, 89, 19, 67, 48}
             };
 
-            for (int row = 1; row < 20; row++)
+            var maxProduct = new int[5];
+            for (int row = 0; row < 20; row++)
             {
-                for (int col = 1; col < 20; col++)
+                for (int col = 0; col < 20; col++)
                 {
-                    var pivot = grid[row, col];
+                    maxProduct[0] = ProductOf4InLineFrom(row, col, 19, ref grid);
+                    maxProduct[1] = ProductOf4InColumnFrom(row, col, 19, ref grid);
+                    maxProduct[2] = ProductOf4InDownRightDiagFrom(row, col, 19, 19, ref grid);
+                    maxProduct[3] = ProductOf4InDownLeftDiagFrom(row, col, 0, 19, ref grid);
 
+                    Array.Sort(maxProduct);
                 }
             }
+
+            return maxProduct[4];
+        }
+
+        private static int ProductOf4InLineFrom(int row, int col, int colMax, ref int[,] grid)
+        {
+            if (col + 3 > colMax) { return 0; }
+            int lineOfFour = grid[row, col] * grid[row, col + 1] * grid[row, col + 2] * grid[row, col + 3];
+            return lineOfFour;
+        }
+
+        private static int ProductOf4InColumnFrom(int row, int col, int rowMax, ref int[,] grid)
+        {
+            if (row + 3 > rowMax) { return 0; }
+            int columnOfFour = grid[row, col] * grid[row + 1, col] * grid[row + 2, col] * grid[row + 3, col];
+            return columnOfFour;
+        }
+
+        private static int ProductOf4InDownRightDiagFrom(int row, int col, int rowMax, int colMax, ref int[,] grid)
+        {
+            if ((row + 3 > rowMax) || (col + 3 > colMax)) { return 0; }
+            int downwardRightDiagOfFour = grid[row, col] * grid[row + 1, col + 1] * grid[row + 2, col + 2] * grid[row + 3, col + 3];
+            return downwardRightDiagOfFour;
+        }
+
+        private static int ProductOf4InDownLeftDiagFrom(int row, int col, int rowMin, int colMax, ref int[,] grid)
+        {
+            if ((row - 3 < rowMin) || (col + 3 > colMax)) { return 0; }
+            int downwardLeftDiagOfFour = grid[row, col] * grid[row - 1, col + 1] * grid[row - 2, col + 2] * grid[row - 3, col + 3];
+            return downwardLeftDiagOfFour;
+        }
+
+        /*
+         * The sequence of triangle numbers is generated by adding the natural numbers. So the 7th triangle number would be 1 + 2 + 3 + 4 + 5 + 6 + 7 = 28. The first ten terms would be:
+         * 1, 3, 6, 10, 15, 21, 28, 36, 45, 55, ...
+         * Let us list the factors of the first seven triangle numbers:
+         *          1: 1
+         *          3: 1,3
+         *          6: 1,2,3,6
+         *          10: 1,2,5,10
+         *          15: 1,3,5,15
+         *          21: 1,3,7,21
+         *          28: 1,2,4,7,14,28
+         * We can see that 28 is the first triangle number to have over five divisors.
+         * What is the value of the first triangle number to have over five hundred divisors?
+         */
+
+        public static long HighlyDivisibleTriangle()
+        {
+            long result = 0;
+
+            long target = 1000;
+            while (NbOfFactors(target) < 500) { target++;}
+
+            return result;
+        }
+
+        private static int NbOfFactors(long numberToFactorize)
+        {
+            var factors = new HashSet<long>();
+            long index = 1;
+            while (index < numberToFactorize)
+            {
+                if (numberToFactorize % index == 0) { factors.Add(index); }
+                index++;
+            }
+            return factors.Count;
         }
     }
-
 }
