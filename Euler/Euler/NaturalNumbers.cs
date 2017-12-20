@@ -109,7 +109,7 @@ namespace Euler
          */
         public static int SmallestEvenlyDivisibleByAllTwentyFirstNumbers()
         {
-            HashSet<int> factors = new HashSet<int>(new[] {11, 12, 13, 14, 15, 16, 17, 18, 19, 20});
+            HashSet<int> factors = new HashSet<int>(new[] { 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 });
 
             int result = 0;
             int candidate = 2520;
@@ -158,8 +158,8 @@ namespace Euler
 
         public static ulong TenThousandOnethPrime()
         {
-            var tenThousandPrimes = new[] {1UL};
-            ulong limit = (ulong) Math.Pow(2, 16);
+            var tenThousandPrimes = new[] { 1UL };
+            ulong limit = (ulong)Math.Pow(2, 16);
 
             tenThousandPrimes = Utils.FindPrimes(limit, tenThousandPrimes);
             while (tenThousandPrimes.Length < 10001)
@@ -276,10 +276,10 @@ namespace Euler
         {
             ulong result = 0;
 
-            var candidates = Utils.FindPrimes(2000000, new ulong[] {0});
+            var candidates = Utils.FindPrimes(2000000, new ulong[] { 0 });
             Array.ForEach(candidates, prime => result += prime);
 
-            return (long) result;
+            return (long)result;
         }
 
         /*
@@ -309,7 +309,7 @@ namespace Euler
          */
         public static long LargestProductInGrid()
         {
-            var grid = new int[,]
+            var grid = new[,]
             {
                 {08, 02, 22, 97, 38, 15, 00, 40, 00, 75, 04, 05, 07, 78, 52, 12, 50, 77, 91, 08},
                 {49, 49, 99, 40, 17, 81, 18, 57, 60, 87, 17, 40, 98, 43, 69, 48, 04, 56, 62, 00},
@@ -395,24 +395,45 @@ namespace Euler
 
         public static long HighlyDivisibleTriangle()
         {
-            long result = 0;
+            int triangleNumber = 3;
+            int previousNbDivisor = 2;
+            int nbFoundFactors = 0;
 
-            long target = 1000;
-            while (NbOfFactors(target) < 500) { target++;}
+            ulong[] primeArray = Utils.FindPrimes(65500, new ulong[1]);
 
-            return result;
-        }
-
-        private static int NbOfFactors(long numberToFactorize)
-        {
-            var factors = new HashSet<long>();
-            long index = 1;
-            while (index < numberToFactorize)
+            while (nbFoundFactors <= 500)
             {
-                if (numberToFactorize % index == 0) { factors.Add(index); }
-                index++;
+                triangleNumber++;
+                int workOnIt = triangleNumber;
+                if (workOnIt % 2 == 0) { workOnIt /= 2; }
+                var nbDivisor = 1;
+                foreach (ulong longPrime in primeArray)
+                {
+                    var prime = (int) longPrime;
+                    if (prime * prime > workOnIt)
+                    {
+                        nbDivisor *= 2;
+                        break;
+                    }
+
+                    var primeExponent = 1;
+                    while (workOnIt % prime == 0)
+                    {
+                        primeExponent++;
+                        workOnIt /= prime;
+                    }
+
+                    if (primeExponent > 1) { nbDivisor *= primeExponent; }
+                    if (workOnIt == 1) { break; }
+                }
+
+                nbFoundFactors = previousNbDivisor * nbDivisor;
+                previousNbDivisor = nbDivisor;
             }
-            return factors.Count;
+
+            var tampon =  triangleNumber * (triangleNumber - 1) / 2;
+            return tampon;
         }
+
     }
 }
