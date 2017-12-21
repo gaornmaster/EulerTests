@@ -643,7 +643,7 @@ namespace Euler
             storeBuilder.Append("53503534226472524250874054075591789781264330331690");
 
             string store = storeBuilder.ToString();
-            if (store.Length != 5000){throw new ArgumentException();}
+            if (store.Length != 5000) { throw new ArgumentException(); }
 
             var data = new int[100, 50];
             var row = 0;
@@ -651,21 +651,36 @@ namespace Euler
             for (var index = 0; index < 5000; index++)
             {
                 data[row, col] = int.Parse(store[index].ToString());
-                col++;   
+                col++;
                 if (col != 50) { continue; }
                 row++;
                 col = 0;
             }
 
-
-
-            for (int column = data.GetLength(1) - 1; col >= 0; col--)
+            int columnSum = 0;
+            Stack<int> bigSum = new Stack<int>();
+            for (int column = data.GetLength(1) - 1; column >= 0; column--)
             {
-                for (int dataRow = 0; dataRow < 100; dataRow++)
-                {
-                    
-                }
+                for (int dataRow = 0; dataRow < 100; dataRow++) { columnSum += data[dataRow, column]; }
+
+                bigSum.Push(columnSum % 10);
+                columnSum /= 10;
             }
+
+            while (columnSum > 00)
+            {
+                bigSum.Push(columnSum % 10);
+                columnSum /= 10;
+            }
+
+            StringBuilder result = new StringBuilder();
+            for (int index = 0; index < 10; index++)
+            {
+                result.Append(bigSum.Pop()
+                                    .ToString());
+            }
+
+            return long.Parse(result.ToString());
         }
     }
 }
