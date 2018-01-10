@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection.Emit;
 using System.Text;
 
 namespace Euler
@@ -659,7 +660,7 @@ namespace Euler
 
             int columnSum = 0;
             Stack<int> bigSum = new Stack<int>();
-            for (int column = data.GetLength(1) - 1; column >= 0; column--)
+            for (int column = 49; column >= 0; column--)
             {
                 for (int dataRow = 0; dataRow < 100; dataRow++) { columnSum += data[dataRow, column]; }
 
@@ -681,6 +682,58 @@ namespace Euler
             }
 
             return long.Parse(result.ToString());
+        }
+
+        public static int LongestColatzSequenceUnderMilion()
+        {
+            var longest = 1;
+            var candidate = 1;
+            var lengths = new int[1000000];
+
+            lengths[1] = 1;
+            for (var local = 1; local < 1000000;)
+            {
+
+                if (lengths[local] > longest)
+                {
+                    longest = lengths[local];
+                    candidate = local;
+                }
+
+                local++;
+                if (local >= 1000000){break;}
+
+                var n = (uint)local;
+                var chainLen = 1;
+
+                for (; ; )
+                {
+                    if ((n & 1) == 1)
+                    {
+                        n += (n << 1) + 1;
+                    }
+                    else
+                    {
+                        n >>= 1;
+
+                        if (n < local)
+                        {
+                            try
+                            {
+                                lengths[local] = chainLen + lengths[n];
+                                break;
+                            }
+                            catch (IndexOutOfRangeException iex)
+                            {
+                                throw;
+                            }
+                        }
+                    }
+                    chainLen++;
+                }
+            }
+
+            return candidate;
         }
     }
 }
