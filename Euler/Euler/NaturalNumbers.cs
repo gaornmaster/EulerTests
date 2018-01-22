@@ -538,7 +538,6 @@ namespace Euler
          *        20849603980134001723930671666823555245252804609722
          *        53503534226472524250874054075591789781264330331690
          */
-
         public static long SumOfBigChunk()
         {
             var storeBuilder = new StringBuilder();
@@ -684,6 +683,15 @@ namespace Euler
             return long.Parse(result.ToString());
         }
 
+        /*
+         * The following iterative sequence is defined for the set of positive integers:
+         * n → n/2 (n is even)
+         * n → 3n + 1 (n is odd)
+         * Using the rule above and starting with 13, we generate the following sequence:
+         * 13 → 40 → 20 → 10 → 5 → 16 → 8 → 4 → 2 → 1
+         * It can be seen that this sequence (starting at 13 and finishing at 1) contains 10 terms. Although it has not been proved yet (Collatz Problem), it is thought that all starting numbers finish at 1.
+         * Which starting number, under one million, produces the longest chain?
+         */
         public static int LongestColatzSequenceUnderMilion()
         {
             var longest = 1;
@@ -718,15 +726,8 @@ namespace Euler
 
                         if (n < local)
                         {
-                            try
-                            {
                                 lengths[local] = chainLen + lengths[n];
                                 break;
-                            }
-                            catch (IndexOutOfRangeException iex)
-                            {
-                                throw;
-                            }
                         }
                     }
                     chainLen++;
@@ -734,6 +735,47 @@ namespace Euler
             }
 
             return candidate;
+        }
+
+        /*
+         * Starting in the top left corner of a 2×2 grid, and only being able to move to the right and down, there are exactly 6 routes to the bottom right corner.
+         * rrdd, rdrd, rddr, drrd, drdr, ddrr
+         * How many such routes are there through a 20×20 grid?
+         */
+        public static long LatticePathsNumber()
+        {
+            const int gridSize = 20;
+            long[,] grid = new long[gridSize + 1, gridSize + 1];
+
+            // initializing bondaries
+            for (int i = 0; i < gridSize; i++)
+            {
+                grid[i, gridSize] = 1;
+                grid[gridSize, i] = 1;
+            }
+
+            for (int i = gridSize - 1; i >= 0; i--)
+            {
+                for (int j = gridSize - 1; j >= 0; j--)
+                {
+                    grid[i, j] = grid[i + 1, j] + grid[i, j + 1];
+                }
+            }
+
+            return grid[0, 0];
+        }
+
+        /*
+         * 2^15 = 32768 and the sum of its digits is 3 + 2 + 7 + 6 + 8 = 26.
+         * What is the sum of the digits of the number 2^1000?
+         */
+        public static long PowerDigitSum()
+        {
+            long result = 0;
+
+
+
+            return result;
         }
     }
 }
