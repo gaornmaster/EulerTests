@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Reflection.Emit;
 using System.Text;
 
@@ -709,7 +710,7 @@ namespace Euler
                 }
 
                 local++;
-                if (local >= 1000000){break;}
+                if (local >= 1000000) { break; }
 
                 var n = (uint)local;
                 var chainLen = 1;
@@ -726,8 +727,8 @@ namespace Euler
 
                         if (n < local)
                         {
-                                lengths[local] = chainLen + lengths[n];
-                                break;
+                            lengths[local] = chainLen + lengths[n];
+                            break;
                         }
                     }
                     chainLen++;
@@ -745,7 +746,7 @@ namespace Euler
         public static long LatticePathsNumber()
         {
             const int gridSize = 20;
-            long[,] grid = new long[gridSize + 1, gridSize + 1];
+            var grid = new long[gridSize + 1, gridSize + 1];
 
             // initializing bondaries
             for (int i = 0; i < gridSize; i++)
